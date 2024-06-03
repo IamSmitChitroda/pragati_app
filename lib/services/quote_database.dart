@@ -8,8 +8,8 @@ class QuoteDataBase {
 
   late Database database;
   Logger logger = Logger();
-  String db_name = 'pragati_db.db';
-  String table_name = 'quote_table';
+  String db_name = 'pragati_data_base.db';
+  String table_name = 'fav_quote_table';
   String sql = 'Query here';
 
   Future<void> initDataBase() async {
@@ -19,7 +19,7 @@ class QuoteDataBase {
       version: 1,
       onCreate: (db, version) {
         sql =
-            "CREATE TABLE $table_name(${QuoteTable.id.name} INTEGER PRIMARY KEY, ${QuoteTable.quote.name} TEXT, ${QuoteTable.author.name} TEXT);";
+            "CREATE TABLE IF NOT EXISTS $table_name(${QuoteTable.id.name} INTEGER PRIMARY KEY AUTOINCREMENT, ${QuoteTable.quote.name} TEXT, ${QuoteTable.author.name} TEXT);";
         db
             .execute(sql)
             .then(
@@ -36,14 +36,26 @@ class QuoteDataBase {
   }
 
   Future<void> insetData({required Quote quote}) async {
+    Map<String, dynamic> data = quote.toMap();
+    data.remove('id');
     await database
         .insert(
           table_name,
-          quote.toMap(),
+          data,
         )
         .then((value) => logger.i(' !Query! ${quote.quote} inserted '))
         .onError((error, stackTrace) =>
             logger.e(' !Query!${quote.quote} insertion error'));
+
+    // sql = "INSERT INTO $table_name VALUES(?,?,?);";
+    // await database.rawInsert(
+    //   sql,
+    //   [
+    //     quote.id,
+    //     quote.quote,
+    //     quote.author,
+    //   ],
+    // );
   }
 
   Future<void> deleteData({required Quote quote}) async {
@@ -59,7 +71,7 @@ class QuoteDataBase {
   }
 
   Future<List<Quote>> getAllData() async {
-    sql = 'SELECT * FROM $table_name ;';
+    sql = 'SELECT * FROM $table_name;';
     List<Map<String, dynamic>> data = await database.rawQuery(sql);
 
     return data.map((e) => Quote.fromJson(e)).toList();
