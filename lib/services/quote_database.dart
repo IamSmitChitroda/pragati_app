@@ -23,11 +23,11 @@ class QuoteDataBase {
         db
             .execute(sql)
             .then(
-              (value) => logger.i('table created'),
+              (value) => logger.i('!Query! table created'),
             )
             .onError(
               (error, stackTrace) =>
-                  logger.e('Table not created\n Error: $error'),
+                  logger.e('!Query! Table not created\n Error: $error'),
             );
       },
       onUpgrade: (version, v1, v2) {},
@@ -41,9 +41,9 @@ class QuoteDataBase {
           table_name,
           quote.toMap(),
         )
-        .then((value) => logger.i('${quote.quote} inserted'))
-        .onError(
-            (error, stackTrace) => logger.e('${quote.quote} insertion error'));
+        .then((value) => logger.i(' !Query! ${quote.quote} inserted '))
+        .onError((error, stackTrace) =>
+            logger.e(' !Query!${quote.quote} insertion error'));
   }
 
   Future<void> deleteData({required Quote quote}) async {
@@ -59,7 +59,9 @@ class QuoteDataBase {
   }
 
   Future<List<Quote>> getAllData() async {
-    List<Map<String, dynamic>> data = await database.query(table_name);
+    sql = 'SELECT * FROM $table_name ;';
+    List<Map<String, dynamic>> data = await database.rawQuery(sql);
+
     return data.map((e) => Quote.fromJson(e)).toList();
   }
 }

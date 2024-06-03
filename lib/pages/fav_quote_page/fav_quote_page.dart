@@ -15,12 +15,11 @@ class FavQuotePage extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: ListView.builder(
-          itemCount: mutable.favQuotes.length,
+          itemCount: mutable.allFavQuotes.length,
           itemBuilder: (context, index) => listTile(
             index: index,
-            quote: mutable.favQuotes[index].quote,
-            authorName: mutable.favQuotes[index].author,
             mutable: mutable,
+            unmutable: unmutable,
           ),
         ),
       ),

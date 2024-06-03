@@ -2,22 +2,50 @@ import 'package:pragati_app/headers.dart';
 
 Widget listTile({
   required int index,
-  required String quote,
-  required String authorName,
-  required mutable,
+  required QuoteController mutable,
+  required QuoteController unmutable,
   context = BuildContext,
-}) =>
-    Card(
-      color: Colors.primaries[index % 18].shade400,
-      child: ListTile(
-        title: Text(quote),
-        subtitle: Text('Author: $authorName'),
-        onTap: () {
-          Navigator.pushNamed(
-            context,
-            AppRoute.appRoute.detail_page,
-            arguments: mutable.allQuotes[index],
-          );
+}) {
+  Logger logger = Logger();
+  Quote quote = mutable.allQuotes[index];
+  return Card(
+    color: Colors.primaries[index % 18].shade400,
+    child: ListTile(
+      leading: IconButton(
+        icon: Icon(
+          mutable.allFavQuotes.contains(quote)
+              ? Icons.favorite
+              : Icons.favorite_border,
+        ),
+        onPressed: () async {
+          mutable.allFavQuotes.contains(quote)
+              ? await unmutable
+                  .addFavQuoteInDataBase(
+                    quote: mutable.allQuotes[index],
+                  )
+                  .then((value) =>
+                      logger.i('! ctr obj ! ${quote.quote} add in fav'))
+                  .onError((error, stackTrace) =>
+                      logger.e('! ctr obj ! ${quote.quote} not add in fav'))
+              : await unmutable
+                  .deleteQuoteInDataBase(
+                    quote: mutable.allQuotes[index],
+                  )
+                  .then((value) =>
+                      logger.i('!ctr obj! ${quote.quote} deleted from fav'))
+                  .onError((error, stackTrace) => logger
+                      .e('!ctr obj! ${quote.quote} not deleted from fav'));
         },
       ),
-    );
+      title: Text(quote.quote),
+      subtitle: Text('Author: ${quote.author}'),
+      onTap: () {
+        Navigator.pushNamed(
+          context,
+          AppRoute.appRoute.detail_page,
+          arguments: mutable.allQuotes[index],
+        );
+      },
+    ),
+  );
+}

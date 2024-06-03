@@ -1,7 +1,7 @@
 import 'package:pragati_app/headers.dart';
 import 'package:flutter/cupertino.dart';
 
-Widget themeButton(context) => IconButton(
+Widget themeButton({context}) => IconButton(
       icon: Icon(
         Provider.of<ThemeController>(context).isDark
             ? Icons.sunny
