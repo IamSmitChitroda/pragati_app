@@ -1,8 +1,8 @@
 import 'package:pragati_app/headers.dart';
 
 class ThemeController with ChangeNotifier {
-  bool isDark = false;
   SharedPreferences sharedPreferences;
+  bool isDark = false;
   ThemeMode themeMode = ThemeMode.system;
 
   ThemeController({required this.sharedPreferences}) {

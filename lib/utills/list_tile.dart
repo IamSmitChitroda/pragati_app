@@ -11,30 +11,30 @@ Widget listTile({
   return Card(
     color: Colors.primaries[index % 18].shade400,
     child: ListTile(
-      leading: IconButton(
+      trailing: IconButton(
         icon: Icon(
-          mutable.allFavQuotes.contains(quote)
+          unmutable.allFavQuotes.contains(quote)
               ? Icons.favorite
               : Icons.favorite_border,
         ),
         onPressed: () async {
           mutable.allFavQuotes.contains(quote)
               ? await unmutable
+                  .deleteQuoteInDataBase(
+                    quote: mutable.allQuotes[index],
+                  )
+                  .then((value) =>
+                      logger.i('!ctr obj! ${quote.quote} deleted from fav'))
+                  .onError((error, stackTrace) =>
+                      logger.e('!ctr obj! ${quote.quote} not deleted from fav'))
+              : await unmutable
                   .addFavQuoteInDataBase(
                     quote: mutable.allQuotes[index],
                   )
                   .then((value) =>
                       logger.i('! ctr obj ! ${quote.quote} add in fav'))
                   .onError((error, stackTrace) =>
-                      logger.e('! ctr obj ! ${quote.quote} not add in fav'))
-              : await unmutable
-                  .deleteQuoteInDataBase(
-                    quote: mutable.allQuotes[index],
-                  )
-                  .then((value) =>
-                      logger.i('!ctr obj! ${quote.quote} deleted from fav'))
-                  .onError((error, stackTrace) => logger
-                      .e('!ctr obj! ${quote.quote} not deleted from fav'));
+                      logger.e('! ctr obj ! ${quote.quote} not add in fav'));
         },
       ),
       title: Text(quote.quote),

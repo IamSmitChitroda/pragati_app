@@ -39,11 +39,8 @@ class QuoteDataBase {
     Map<String, dynamic> data = quote.toMap();
     data.remove('id');
     await database
-        .insert(
-          table_name,
-          data,
-        )
-        .then((value) => logger.i(' !Query! ${quote.quote} inserted '))
+        .insert(table_name, data)
+        .then((value) => logger.i('!Query! ${quote.quote} inserted '))
         .onError((error, stackTrace) =>
             logger.e(' !Query!${quote.quote} insertion error'));
 
@@ -67,7 +64,7 @@ class QuoteDataBase {
         )
         .then((value) => logger.i('${quote.quote} deleted'))
         .onError(
-            (error, stackTrace) => logger.e('${quote.quote} deletion error'));
+            (error, stackTrace) => logger.e('${quote.quote} deletion $error'));
   }
 
   Future<List<Quote>> getAllData() async {
