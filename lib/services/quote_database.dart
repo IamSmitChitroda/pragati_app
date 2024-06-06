@@ -43,16 +43,6 @@ class QuoteDataBase {
         .then((value) => logger.i('!Query! ${quote.quote} inserted '))
         .onError((error, stackTrace) =>
             logger.e(' !Query!${quote.quote} insertion error'));
-
-    // sql = "INSERT INTO $table_name VALUES(?,?,?);";
-    // await database.rawInsert(
-    //   sql,
-    //   [
-    //     quote.id,
-    //     quote.quote,
-    //     quote.author,
-    //   ],
-    // );
   }
 
   Future<void> deleteData({required Quote quote}) async {
