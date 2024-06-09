@@ -16,6 +16,7 @@ Widget listTile({
           unmutable.allFavQuotes.contains(quote)
               ? Icons.favorite
               : Icons.favorite_border,
+          // index < 3 ? Icons.favorite : Icons.favorite_border,
         ),
         onPressed: () async {
           mutable.allFavQuotes.contains(quote)
